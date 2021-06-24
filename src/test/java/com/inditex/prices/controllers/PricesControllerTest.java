@@ -3,6 +3,7 @@ package com.inditex.prices.controllers;
 import com.inditex.prices.dtos.PriceDTO;
 import com.inditex.prices.entities.Brand;
 import com.inditex.prices.entities.Price;
+import com.inditex.prices.exceptions.DatePriceFormatException;
 import com.inditex.prices.services.PriceService;
 import java.math.BigDecimal;
 import java.util.ArrayList;
@@ -38,8 +39,10 @@ public class PricesControllerTest {
     }
 
     @Test
-    public void testGetPricesIncorrectDateFormat() {
+    public void testGetPricesIncorrectDateFormat() throws DatePriceFormatException {
         System.out.println("getPrices - IncorrectDateFormat");
+        
+        when(priceService.findPrice(any(Optional.class), any(Integer.class), any(Integer.class))).thenThrow(DatePriceFormatException.class);
 
         webClient.get().uri(
                 uriBuilder -> uriBuilder
@@ -53,10 +56,10 @@ public class PricesControllerTest {
     }
 
     @Test
-    public void testGetPricesNoData() {
+    public void testGetPricesNoData() throws DatePriceFormatException {
         System.out.println("getPrices - No data");
         
-        when(priceService.findPrice(any(Long.class), any(Integer.class), any(Integer.class))).thenReturn(Optional.empty());
+        when(priceService.findPrice(any(Optional.class), any(Integer.class), any(Integer.class))).thenReturn(Optional.empty());
 
         webClient.get().uri(
                 uriBuilder -> uriBuilder
@@ -70,7 +73,7 @@ public class PricesControllerTest {
     }
 
     @Test
-    public void testGetPrices() {
+    public void testGetPrices() throws DatePriceFormatException {
         System.out.println("getPrices");
         
         Brand brand = new Brand();
@@ -85,7 +88,7 @@ public class PricesControllerTest {
         price.setProductId(35455);
         price.setPrice(BigDecimal.valueOf(35.50));
         
-        when(priceService.findPrice(any(Long.class), any(Integer.class), any(Integer.class))).thenReturn(Optional.of(price));
+        when(priceService.findPrice(any(Optional.class), any(Integer.class), any(Integer.class))).thenReturn(Optional.of(price));
 
         webClient.get().uri(
                 uriBuilder -> uriBuilder
