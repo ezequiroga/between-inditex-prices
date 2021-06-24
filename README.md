@@ -1,5 +1,5 @@
 # Prices API
-API para consultar de tarifas.
+API para consultar tarifas de productos para un momento y marca determinados.
 
 ## Settings
 - Java 11
