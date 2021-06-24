@@ -48,28 +48,7 @@ public class PricesController {
             @Parameter(description = "Id de la marca del producto")
             @RequestParam int brandId) throws DatePriceFormatException, PriceNotFoudException {
 
-        /**
-         * Se verifica si la fecha que llega por parámetro es válida.
-         */
-        Optional<Boolean> valid = date.map(Utils::validDate);
-        Long queryDate;
-
-        /**
-         * Si valid es vacio el parámetro no llegó en el request, entonces se
-         * utiliza el datetime del momento de la petición.
-         */
-        if (valid.isEmpty()) {
-            queryDate = Utils.generateInstantDateDB();
-        } else {
-            /*Si la fecha no es valida, se retorna HTTP 422*/
-            if (!valid.get()) {
-                throw new DatePriceFormatException("Error al procesar el parametro date."
-                        + " Formato de fecha incorrecto.");
-            }
-            queryDate = date.map(Utils::dateApiToDateDB).get();
-        }
-
-        Optional<PriceDTO> price = priceService.findPrice(queryDate, productId, brandId);
+        Optional<PriceDTO> price = priceService.findPrice(date, productId, brandId);
 
         return ResponseEntity.ok(
             Mono.just(price.orElseThrow(() -> new PriceNotFoudException("No hay datos para los parametros enviados")))

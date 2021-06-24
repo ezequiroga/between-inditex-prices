@@ -1,7 +1,7 @@
 package com.inditex.prices.services;
 
 import com.inditex.prices.dtos.PriceDTO;
-import com.inditex.prices.entities.Price;
+import com.inditex.prices.exceptions.DatePriceFormatException;
 import java.util.Optional;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
@@ -25,9 +25,9 @@ public class PriceServiceTest {
     }
 
     @Test
-    public void testFindPriceNoData() {
+    public void testFindPriceNoData() throws DatePriceFormatException {
         System.out.println("findPrice - No data");
-        Long date = 20210614160000L;
+        Optional<String> date = Optional.of("2021-06-14-16.00.00");
         int productId = 35455;
         int brandId = 1;
         Optional<PriceDTO> result = priceService.findPrice(date, productId, brandId);
@@ -35,9 +35,9 @@ public class PriceServiceTest {
     }
 
     @Test
-    public void testFindPrice() {
+    public void testFindPrice() throws DatePriceFormatException {
         System.out.println("findPrice");
-        Long date = 20200614160000L;
+        Optional<String> date = Optional.of("2020-06-14-16.00.00");
         int productId = 35455;
         int brandId = 1;
         Optional<PriceDTO> result = priceService.findPrice(date, productId, brandId);
