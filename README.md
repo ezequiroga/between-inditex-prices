@@ -1,9 +1,6 @@
 # Prices API
 API para consultar tarifas de productos para un momento y marca determinados.
 
-## DB
-La aplicacion crea y utiliza un esquema propio llamado __INDITEX__.
-
 ## Settings
 - Java 11
 - SpringBoot 2.5.1
@@ -11,6 +8,9 @@ La aplicacion crea y utiliza un esquema propio llamado __INDITEX__.
 
 ## Documentacion
 La documentacion de la API se encuentra en /swagger-ui.html
+
+## DB
+La aplicacion crea y utiliza un esquema propio llamado __INDITEX__.
 
 ## Ejecucion
 Para levantar el servicio realizar los siguientes pasos:
