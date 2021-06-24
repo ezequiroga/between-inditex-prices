@@ -25,9 +25,27 @@ public class UtilsTest {
     }
 
     @Test
-    public void testValidDateFalse() {
+    public void testValidDateIncorrectFormat() {
         System.out.println("validDate");
         String date = "2020-12-3123.59.59";
+        boolean expResult = false;
+        boolean result = Utils.validDate(date);
+        assertEquals(expResult, result);
+    }
+
+    @Test
+    public void testValidDateIncorrectHours() {
+        System.out.println("validDate");
+        String date = "2020-12-31-25.59.59";
+        boolean expResult = false;
+        boolean result = Utils.validDate(date);
+        assertEquals(expResult, result);
+    }
+
+    @Test
+    public void testValidDateIncorrectMonths() {
+        System.out.println("validDate");
+        String date = "2020-15-31-25.59.59";
         boolean expResult = false;
         boolean result = Utils.validDate(date);
         assertEquals(expResult, result);
