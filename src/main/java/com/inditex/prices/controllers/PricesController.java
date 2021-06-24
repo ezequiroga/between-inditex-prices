@@ -39,7 +39,7 @@ public class PricesController {
                             schema = @Schema(implementation = PriceDTO.class))}),
         @ApiResponse(responseCode = "422", description = "El formato de la fecha recibida es incorrecto",
                 content = @Content),
-        @ApiResponse(responseCode = "404", description = "No se encontro una tafica para los parametros recibidos",
+        @ApiResponse(responseCode = "404", description = "No se encontro una tarifa para los parametros recibidos",
                 content = @Content)})
     @GetMapping(value = "/")
     public ResponseEntity<Mono<PriceDTO>> getPrices(
