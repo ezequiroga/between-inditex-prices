@@ -1,6 +1,7 @@
 package com.inditex.prices.controllers;
 
 import com.inditex.prices.dtos.PriceDTO;
+import com.inditex.prices.exceptions.DatePriceFormatException;
 import com.inditex.prices.services.PriceService;
 import com.inditex.prices.utils.Utils;
 import io.swagger.v3.oas.annotations.Operation;
@@ -11,7 +12,6 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -48,7 +48,7 @@ public class PricesController {
             @Parameter(description = "Id del producto")
             @RequestParam int productId,
             @Parameter(description = "Id de la marca del producto")
-            @RequestParam int brandId) {
+            @RequestParam int brandId) throws DatePriceFormatException {
 
         /**
          * Se verifica si la fecha que llega por parámetro es válida.
@@ -65,9 +65,8 @@ public class PricesController {
         } else {
             /*Si la fecha no es valida, se retorna HTTP 422*/
             if (!valid.get()) {
-                return ResponseEntity
-                        .status(HttpStatus.UNPROCESSABLE_ENTITY)
-                        .build();
+                throw new DatePriceFormatException("Error al procesar el parametro date."
+                        + " Formato de fecha incorrecto.");
             }
             queryDate = date.map(Utils::dateApiToDateDB).get();
         }
