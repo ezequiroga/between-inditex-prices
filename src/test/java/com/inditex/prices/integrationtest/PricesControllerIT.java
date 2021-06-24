@@ -1,5 +1,6 @@
 package com.inditex.prices.integrationtest;
 
+import com.inditex.prices.dtos.PriceDTO;
 import com.inditex.prices.entities.Brand;
 import com.inditex.prices.entities.Price;
 import java.math.BigDecimal;
@@ -54,7 +55,7 @@ public class PricesControllerIT {
         sb.append("&");
         sb.append("brandId=1");
 
-        ResponseEntity<Price> re = restTemplate.getForEntity(sb.toString(), Price.class);
+        ResponseEntity<PriceDTO> re = restTemplate.getForEntity(sb.toString(), PriceDTO.class);
         
         assertEquals(re.getStatusCode(),HttpStatus.UNPROCESSABLE_ENTITY);
     }
@@ -72,28 +73,50 @@ public class PricesControllerIT {
         sb.append("&");
         sb.append("brandId=1");
 
-        ResponseEntity<Price> re = restTemplate.getForEntity(sb.toString(), Price.class);
+        ResponseEntity<PriceDTO> re = restTemplate.getForEntity(sb.toString(), PriceDTO.class);
         
         assertEquals(re.getStatusCode(),HttpStatus.NOT_FOUND);
     }
 
     @Test
-    public void testGetPrices() {
-        System.out.println("getPrices");
+    public void testGetPricesMissingParams() {
+        System.out.println("getPrices - Missing params");
         
-        Brand brand = new Brand();
-        brand.setId(1);
-        brand.setDesc("ZARA");
+        StringBuilder sb = new StringBuilder();
+        sb.append(uri).append("/prices/");
+        sb.append("?");
+        sb.append("date=2021-12-31-23.59.59");
+        sb.append("&");
+        sb.append("productId=35455");
+
+        ResponseEntity<PriceDTO> re = restTemplate.getForEntity(sb.toString(), PriceDTO.class);
         
-        Price price = new Price();
-        price.setId(2);
-        price.setBrand(brand);
-        price.setStartDate(20200614150000L);
-        price.setEndDate(20200614183000L);
-        price.setProductId(35455);
-        price.setPriority(1);
-        price.setPrice(BigDecimal.valueOf(25.45));
-        price.setCurr("EUR");
+        assertEquals(re.getStatusCode(),HttpStatus.BAD_REQUEST);
+    }
+
+    @Test
+    public void testGetPrices_Test1() {
+        System.out.println("getPrices - Test 1");
+        
+        StringBuilder sb = new StringBuilder();
+        sb.append(uri).append("/prices/");
+        sb.append("?");
+        sb.append("date=2020-06-14-10.00.00");
+        sb.append("&");
+        sb.append("productId=35455");
+        sb.append("&");
+        sb.append("brandId=1");
+
+        ResponseEntity<PriceDTO> re = restTemplate.getForEntity(sb.toString(), PriceDTO.class);
+        
+        assertEquals(re.getStatusCode(),HttpStatus.OK);
+        assertEquals(1, re.getBody().getPriceList());
+        assertEquals(BigDecimal.valueOf(35.50).setScale(2), re.getBody().getPrice());
+    }
+
+    @Test
+    public void testGetPrices_Test2() {
+        System.out.println("getPrices - Test 2");
         
         StringBuilder sb = new StringBuilder();
         sb.append(uri).append("/prices/");
@@ -104,11 +127,71 @@ public class PricesControllerIT {
         sb.append("&");
         sb.append("brandId=1");
 
-        ResponseEntity<Price> re = restTemplate.getForEntity(sb.toString(), Price.class);
+        ResponseEntity<PriceDTO> re = restTemplate.getForEntity(sb.toString(), PriceDTO.class);
         
         assertEquals(re.getStatusCode(),HttpStatus.OK);
-        assertEquals(2, re.getBody().getId());
-        assertEquals(BigDecimal.valueOf(25.45), re.getBody().getPrice());
+        assertEquals(2, re.getBody().getPriceList());
+        assertEquals(BigDecimal.valueOf(25.45).setScale(2), re.getBody().getPrice());
+    }
+
+    @Test
+    public void testGetPrices_Test3() {
+        System.out.println("getPrices - Test 3");
+        
+        StringBuilder sb = new StringBuilder();
+        sb.append(uri).append("/prices/");
+        sb.append("?");
+        sb.append("date=2020-06-14-21.00.00");
+        sb.append("&");
+        sb.append("productId=35455");
+        sb.append("&");
+        sb.append("brandId=1");
+
+        ResponseEntity<PriceDTO> re = restTemplate.getForEntity(sb.toString(), PriceDTO.class);
+        
+        assertEquals(re.getStatusCode(),HttpStatus.OK);
+        assertEquals(1, re.getBody().getPriceList());
+        assertEquals(BigDecimal.valueOf(35.50).setScale(2), re.getBody().getPrice());
+    }
+
+    @Test
+    public void testGetPrices_Test4() {
+        System.out.println("getPrices - Test 4");
+        
+        StringBuilder sb = new StringBuilder();
+        sb.append(uri).append("/prices/");
+        sb.append("?");
+        sb.append("date=2020-06-15-10.00.00");
+        sb.append("&");
+        sb.append("productId=35455");
+        sb.append("&");
+        sb.append("brandId=1");
+
+        ResponseEntity<PriceDTO> re = restTemplate.getForEntity(sb.toString(), PriceDTO.class);
+        
+        assertEquals(re.getStatusCode(),HttpStatus.OK);
+        assertEquals(3, re.getBody().getPriceList());
+        assertEquals(BigDecimal.valueOf(30.50).setScale(2), re.getBody().getPrice());
+    }
+
+    @Test
+    public void testGetPrices_Test5() {
+        System.out.println("getPrices - Test 5");
+        
+        StringBuilder sb = new StringBuilder();
+        sb.append(uri).append("/prices/");
+        sb.append("?");
+        sb.append("date=2020-06-16-21.00.00");
+        sb.append("&");
+        sb.append("productId=35455");
+        sb.append("&");
+        sb.append("brandId=1");
+
+        ResponseEntity<PriceDTO> re = restTemplate.getForEntity(sb.toString(), PriceDTO.class);
+        
+        assertEquals(re.getStatusCode(),HttpStatus.OK);
+        assertEquals(4, re.getBody().getPriceList());
+        assertEquals(BigDecimal.valueOf(38.95).setScale(2), re.getBody().getPrice());
     }
 
 }
